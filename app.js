@@ -48,3 +48,31 @@ app.route('/articles')
         .catch(() => res.send("Deletion unsuccessful"))
     
 });
+
+app.route('/articles/:article')
+    .get((req, res) => {
+        Article.findOne({ title: req.params.article })
+            .then(response => {
+                res.send(response);
+            })
+            .catch(err => res.send(err));
+    })
+    .put((req, res) => {
+        const replace = {
+            title : req.body.title,
+            content : req.body.content,
+        }
+        Article.findOneAndReplace({ title: req.params.article }, replace)
+            .then(() => res.send("successful"))
+            .catch(err => res.send(err));
+    })
+    .patch((req, res) => {
+        Article.findOneAndUpdate({ title: req.params.article }, {$set: req.body})
+            .then(() => res.send("successful"))
+            .catch(err => res.send(err));
+    })
+    .delete((req, res) => {
+        Article.findOneAndDelete({ title: req.params.article })
+            .then(() => res.send("Successful"))
+            .catch(err => res.send(err));
+    })
